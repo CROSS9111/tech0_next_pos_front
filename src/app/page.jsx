@@ -1,10 +1,14 @@
 'use client'
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import BarcodeReader from './components/BarcodeReader';
 import ProductDisplay from './components/ProductDisplay';
 import PurchaseList from './components/PurchaseList';
 import TitleBar from './components/TitleBar';
+import Quagga from "quagga";
+
 // import styles from '../styles/Home.module.css'; // Next.js推奨のCSSモジュールを使用する
+
+
 
 export default function Home() {
   const [product, setProduct] = useState({});
@@ -22,31 +26,25 @@ export default function Home() {
   ////////////////////fetch//////////////////////////
   const handleScan = async (code) => {
     console.log(11111)
-    setShowScanner(false); // スキャンが完了したらバーコードリーダーを非表示にする
-    try {
-      const res = await fetch(
-        process.env.REACT_APP_API_URL + "/search_product/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ code: code }),
-        }
-      );
-      console.log(res)
 
-      const data = await res.json();
-      console.log(data)
-      if (data.status === "success") {
+    setShowScanner(false); // スキャンが完了したらバーコードリーダーを非表示にする
+    const res = await fetch(process.env.REACT_APP_API_URL + "/search_product/",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ code: code }),
+    });
+
+    console.log(res)
+
+    const data = await res.json();      
+    if (data.status === "success") {
         setProduct(data.message);
       } else {
         setProduct({});
       }
-    } catch (error) {
-      console.error("Error fetching product:", error);
-      setProduct({});
-    }
   };
   ////////////////////fetch//////////////////////////
   //////////////////////////////////////////////
@@ -116,15 +114,19 @@ export default function Home() {
       console.error("Error making a purchase:", error);
     }
   };
+  
 
   return (
     <div className="full-container">
       {/* showScannerがtrueならBarcodeReaderを表示する */}
       {showScanner ? ( // showScannerの状態に応じてバーコードリーダーを表示する
         <BarcodeReader onScan={handleScan} />
+
       ) : (
         <>
           <TitleBar />
+        
+
           {/* カメラのオンオフ */}
           <div className="content-body">
             <div className="horizontal-container">
