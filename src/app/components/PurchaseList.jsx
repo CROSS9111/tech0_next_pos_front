@@ -1,15 +1,18 @@
 import React from "react";
-// import "./PurchaseList.css";
 
 const PurchaseList = ({ items }) => {
   return (
-    <ul>
-      {items.map((item, index) => (
-        <li key={index}>
-          {item.PRD_NAME} ×1 {item.PRD_PRICE} {item.PRD_PRICE}
-        </li>
-      ))}
-    </ul>
+    <div className="w-full max-w-md p-4 border-2 border-blue-500 rounded my-4" style={{ minHeight: '15rem' }}>
+      <ul className="list-none m-0 p-0">
+        {items.map((item, index) => (
+            <li key={index} className="flex justify-between my-2">
+              <span>{item.PRD_NAME} ×1</span>
+              <span>{item.PRD_PRICE}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   );
 };
 

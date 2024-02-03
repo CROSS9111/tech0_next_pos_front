@@ -25,9 +25,10 @@ export default function Home() {
   
   const handleScan = async (code) => {
     console.log("handleScan Start")
+    // console.log(code)
 
     setShowScanner(false); // スキャンが完了したらバーコードリーダーを非表示にする
-    const res = await fetch(process.env.REACT_APP_API_URL + "/search_product/",
+    const res = await fetch(process.env.NEXT_PUBLIC_APP_API_URL + "/search_product/",
     {
       method: "POST",
       headers: {
@@ -36,11 +37,12 @@ export default function Home() {
       body: JSON.stringify({ code: code }),
     });
 
-    console.log(res)
-
-    const data = await res.json();      
+    const data = await res.json();
+    console.log(data)
+    // ここは暫定      
     if (data.status === "success") {
         setProduct(data.message);
+        console.log(data.message)
       } else {
         setProduct({});
       }
@@ -89,7 +91,7 @@ export default function Home() {
 
     try {
       const response = await fetch(
-        process.env.REACT_APP_API_URL + "/purchase/",
+        process.env.NEXT_PUBLIC_APP_API_URL + "/purchase/",
         {
           method: "POST",
           headers: {
@@ -114,59 +116,68 @@ export default function Home() {
   
 
   return (
-    <div className="full-container">
-      {/* showScannerがtrueならBarcodeReaderを表示する */}
-      {showScanner ? ( // showScannerの状態に応じてバーコードリーダーを表示する
-        <BarcodeReader onScan={handleScan} />
-
-      ) : (
-        <>
-          <TitleBar />
-          {/* カメラのオンオフ */}
-          <div className="content-body">
-            <div className="horizontal-container">
+    <div>
+      <TitleBar />
+      <div className="flex flex-col items-center justify-start min-h-screen bg-white">
+        {/* showScannerがtrueならReaderを表示する */}
+        {showScanner ? (
+            <BarcodeReader onScan={handleScan} />
+        ) : (
+        <div className="w-full max-w-md p-4">
+              {/* スキャンボタン */}
               <button
-                className="osha-button"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-full mb-4"
                 onClick={() => setShowScanner(true)}
               >
                 スキャン
               </button>
-              <p className="whitetext">OR</p>
+              
+              {/* ORテキスト */}
+              <p className="text-center my-2">OR</p>
 
-              {/* 入力エリア。searchcodeで識別 */}
-              <input
-                type="text"
-                value={searchCode}
-                className="input_area"
-                onChange={(e) => setSearchCode(e.target.value)}
-                placeholder="コードを入力"
-              />
+              {/* コード入力エリア */}
+              <div className="flex items-center border-b border-blue-500 py-2">
+                <input
+                  type="text"
+                  value={searchCode}
+                  className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                  onChange={(e) => setSearchCode(e.target.value)}
+                  placeholder="コードを入力"
+                />
+              </div>
 
-
-              <button className="osha-button" onClick={handleSearch}>
-              {/* 検索をおすとhandleSearchが起動 */}
+              {/* 検索ボタン */}
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-full mt-4"
+                onClick={handleSearch}
+              >
                 検索
               </button>
-            </div>
+            
 
-            {/* プロダクトの名前が出る */}
-            <ProductDisplay product={product} />
+              {/* プロダクトの名前表示エリア */}
+              <ProductDisplay product={product} />
 
-            <button className="osha-button" onClick={handleAdd}>
-              追加
-            </button>
+              {/* 検索ボタン */}
+              <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full w-full mb-4"
+               onClick={handleAdd}>
+                追加
+              </button>
 
-            <div
-              className={`triangle-down ${animateTriangle ? "animate" : ""}`}
-            ></div>
-            <div className="text-purchase">購入リスト</div>
-            <PurchaseList items={items} />
-            <button className="osha-button" onClick={handlePurchase}>
-              購入
-            </button>
-          </div>
-        </>
-      )}
+              <div
+                className={`triangle-down ${animateTriangle ? "animate" : ""}`}
+              ></div>
+              <div className="text-purchase">購入リスト</div>
+              <PurchaseList items={items} />
+              <button className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-full w-full mb-4" onClick={handlePurchase}>
+                購入
+              </button>
+        </div>
+          
+        )}
+      </div>
     </div>
   );
 };
+
+

@@ -9,7 +9,7 @@ import { useZxing } from "react-zxing";
 export default function BarcodeReader ({ onScan }) {
   const [barcodeError, setbarcodeError] = useState(null);
   const [lastScans, setLastScans] = useState([]); // 最後の3回のスキャン結果を追跡するための状態
-  const [decodedText, setDecodedText] = useState("");
+  // const [decodedText, setDecodedText] = useState("");
   const [count,setCount] = useState(0);
 
   const { ref } = useZxing({
@@ -21,6 +21,7 @@ export default function BarcodeReader ({ onScan }) {
     // スキャン結果取得
     onDecodeResult(result) { 
       const newDecodedText = result.getText(); 
+      // console.log(newDecodedText) //バーコード読み取った値
       const updatedScans = [...lastScans, newDecodedText].slice(-3);
       setLastScans(updatedScans);
 
@@ -33,25 +34,27 @@ export default function BarcodeReader ({ onScan }) {
         updatedScans.length === 3 &&
         updatedScans.every(code => code === newDecodedText)
       ){
-        onScan(decodedText)
+        onScan(newDecodedText)
         setCount(0)
       }
-      // setDecodedText(result.getText());
+      // 4901696541616
+      // 4902220772414
       
     }})
 
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-start pt-10">
       {barcodeError && <p  className="text-red-500">{barcodeError}</p>}
       {/* スキャンする画面を表示する */}
       <div className="flex flex-col items-center">
-        <video ref={ref} className="border-4 border-gray-400" />
-        <p>
-          <span>Last result:</span>
-          <span>{lastScans}</span>
+        <p className="text-lg text-gray-600 font-semibold mt-2">
+          カメラをバーコードに向けてください(3回読み込みます)
         </p>
-        <p>カメラをバーコードに向けてください</p>
+        <video ref={ref} className="border-4 border-gray-400 mt-4" />
+        <p>
+          <span>読み取り成功回数:{count}</span>
+        </p>
       </div>
     </div>
   );
