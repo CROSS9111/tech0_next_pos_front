@@ -23,9 +23,8 @@ export default function Home() {
   const [animateTriangle, setAnimateTriangle] = useState(false);
   const [searchCode, setSearchCode] = useState("");
   
-  ////////////////////fetch//////////////////////////
   const handleScan = async (code) => {
-    console.log(11111)
+    console.log("handleScan Start")
 
     setShowScanner(false); // スキャンが完了したらバーコードリーダーを非表示にする
     const res = await fetch(process.env.REACT_APP_API_URL + "/search_product/",
@@ -46,8 +45,7 @@ export default function Home() {
         setProduct({});
       }
   };
-  ////////////////////fetch//////////////////////////
-  //////////////////////////////////////////////
+
   const handleSearch = () => {
     //入ってなかった場合
     if (!searchCode) {
@@ -57,7 +55,6 @@ export default function Home() {
 
     handleScan(searchCode);
   };
-  //////////////////////////////////////////////
 
   const handleAdd = () => {
     //入ってなかった場合
@@ -125,8 +122,6 @@ export default function Home() {
       ) : (
         <>
           <TitleBar />
-        
-
           {/* カメラのオンオフ */}
           <div className="content-body">
             <div className="horizontal-container">
