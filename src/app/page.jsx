@@ -6,10 +6,6 @@ import PurchaseList from './components/PurchaseList';
 import TitleBar from './components/TitleBar';
 import Quagga from "quagga";
 
-// import styles from '../styles/Home.module.css'; // Next.js推奨のCSSモジュールを使用する
-
-
-
 export default function Home() {
   const [product, setProduct] = useState({});
   // const [product, setProduct] = useState({
