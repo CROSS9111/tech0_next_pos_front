@@ -4,7 +4,6 @@ import BarcodeReader from './components/BarcodeReader';
 import ProductDisplay from './components/ProductDisplay';
 import PurchaseList from './components/PurchaseList';
 import TitleBar from './components/TitleBar';
-import Quagga from "quagga";
 
 export default function Home() {
   const [product, setProduct] = useState({});
